@@ -3,35 +3,60 @@ import { withRouter } from "react-router";
 import { DashboardHeader } from "./DashboardHeader";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import background from "./images/2.avif";
 import "./card.css";
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { post: [], value: "" };
+    this.state = { post: [], value: "", flag: 0 };
   }
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
   };
 
+  deletePost = (event) => {
+    console.log(event.target.value);
+    this.state.post.splice(event.target.value, 1);
+    this.setState({ flag: 1 });
+  };
+
   handleClick = () => {
     if (this.state.value !== "") {
-      this.setState(
-        {
-          post: [...this.state.post, this.state.value],
-        },
-        () => {
-          document.getElementById("print").innerHTML = this.state.post
-            .map((item) => `<h4 id="main">` + item + `<h4/>`)
-            .join("");
-        }
-      );
+      this.setState({
+        post: [...this.state.post, this.state.value],
+      });
     }
   };
 
   render() {
+    const ren = this.state.post.map((item, index) => (
+      <Card key={index} id="main">
+        <Card.Body>
+          <Card.Text>{item}</Card.Text>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <Button
+            id="button"
+            value={index}
+            onClick={this.deletePost}
+            variant="danger"
+          >
+            Delete
+          </Button>
+        </Card.Body>
+      </Card>
+    ));
     return (
       <>
         <DashboardHeader />
@@ -58,17 +83,18 @@ class Dashboard extends React.Component {
                   Write your post <b>here -</b>
                 </h3>
               </Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={8}
-                style={{
-                  width: "1000px",
-                  marginLeft: "400px",
-                }}
-                onChange={this.handleChange}
-                placeholder="Whatever you want to post write here.."
-                required
-              />
+              <div style={{ textAlign: "-webkit-center" }}>
+                <Form.Control
+                  as="textarea"
+                  rows={8}
+                  style={{
+                    width: "1000px",
+                  }}
+                  onChange={this.handleChange}
+                  placeholder="Whatever you want to post write here.."
+                  required
+                />
+              </div>
             </Form.Group>
           </Form>
           <Button
@@ -80,7 +106,7 @@ class Dashboard extends React.Component {
           </Button>
           <br />
           <br />
-          <p id="print"></p>
+          {ren}
         </div>
       </>
     );
